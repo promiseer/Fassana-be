@@ -14,7 +14,6 @@ exports.createUser = async (req) => {
     !first_name ||
     !last_name ||
     !contact ||
-    !isMentor ||
     !role
   ) {
     throw new ExpressError(401, "Bad request");

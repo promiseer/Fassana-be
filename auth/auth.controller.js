@@ -5,20 +5,18 @@ require("dotenv").config();
 const ExpressError = require("../utils/errorGenerator");
 const { generateAccessToken } = require("../utils/jwt");
 
-exports.getUser = async (req) => {
-  const _id = req.token_data._id;
-  const users = await usersDataAccess.findUser({ _id: _id });
-  return {
-    error: false,
-    sucess: true,
-    message: "Get user",
-    data: users,
-  };
-};
-
 exports.createUser = async (req) => {
-  const { email, password, first_name, last_name, contact } = req.body;
-  if (!password || !email || !first_name || !last_name || !contact) {
+  const { email, password, first_name, last_name, contact, isMentor, role } =
+    req.body;
+  if (
+    !password ||
+    !email ||
+    !first_name ||
+    !last_name ||
+    !contact ||
+    !isMentor ||
+    !role
+  ) {
     throw new ExpressError(401, "Bad request");
   }
   const passwordHash = bcrypt.hashSync(req.body.password, 10);
@@ -29,15 +27,12 @@ exports.createUser = async (req) => {
     last_name: req.body.last_name,
     contact: req.body.contact,
     email: req.body.email,
+    role: req.body.role,
+    isMentor: req.body.isMentor,
     password: passwordHash,
   };
   const storedUser = await usersDataAccess.storeUser(data);
-  const otpSend = {
-    from: process.env.email,
-    to: storedUser.email,
-    subject: "Sending email using node.js",
-    text: `http://localhost:3001/Resetpassword/${storedUser._id}`,
-  };
+
   return {
     error: false,
     sucess: true,
@@ -64,7 +59,7 @@ exports.loginUser = async (req, res) => {
   if (!match) {
     return new ExpressError(403, "Invalid password");
   }
-  const token = generateAccessToken({ _id: userData._id });
+  const token = generateAccessToken({ _id: userData._id, role: userData.role });
   return {
     error: false,
     sucess: true,
@@ -72,91 +67,6 @@ exports.loginUser = async (req, res) => {
     data: userData,
     token,
   };
-};
-
-exports.updateUser = async (req, res) => {
-  const _id = req.token_data._id;
-  const updateData = {
-    _id,
-    toUpdate: {
-      contact: req.body.contact,
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-    },
-  };
-  const update = await usersDataAccess.updateUser(updateData);
-  return {
-    error: false,
-    sucess: true,
-    message: "updated user successfully",
-    data: update,
-  };
-};
-
-exports.updatePassword = async (req, res) => {
-  const _id = req.token_data._id;
-  const { password, newPassword } = req.body;
-  if (!password || !newPassword) {
-    throw new ExpressError(401, "plz enter the  password or newPassword");
-  }
-  const userData = await usersDataAccess.findUser({
-    _id: _id,
-  });
-  const match = bcrypt.compareSync(password, userData.password);
-  if (!match) {
-    return new ExpressError(403, "Your Old Password is Invalid");
-  }
-  const passwordd = bcrypt.hashSync(newPassword, 10);
-  const updateData = {
-    _id,
-    toUpdate: {
-      password: passwordd,
-    },
-  };
-  const updatePass = await usersDataAccess.updateUser(updateData);
-  return {
-    error: false,
-    sucess: true,
-    message: "updated password successfully",
-    data: updatePass,
-  };
-};
-
-exports.uploadImage = async (req, res) => {
-  const _id = req.token_data._id;
-  let image;
-  if (!req.file) {
-    image = "uploads/1633780506772defaultImage.jpg";
-  } else {
-    image = "/uploads/" + req.file.filename;
-  }
-  const updateImage = {
-    _id,
-    toUpdate: {
-      profileImage: image,
-    },
-  };
-  const updatedProfile = await usersDataAccess.updateUser(updateImage);
-  return {
-    error: false,
-    sucess: true,
-    message: "Uploaded Image Sucessfully",
-    data: updatedProfile,
-  };
-};
-
-exports.getAllusers = async (req, res) => {
-  const users = await usersDataAccess.findAll();
-  return {
-    error: false,
-    sucess: true,
-    message: "Get all users Sucessfully",
-    data: users,
-  };
-};
-
-exports.getId = async (req, res) => {
-  res.send(req.params._id);
 };
 
 exports.forgotPassword = async (req, res) => {
@@ -226,32 +136,6 @@ exports.resetPassword = async (req, res) => {
   };
 };
 
-exports.reminderTime = async (req, res) => {
-  const { subject, text, timezone, reminderTime } = req.body;
-  if (!subject || !text || !timezone || !reminderTime) {
-    throw new ExpressError(401, "Bad request");
-  }
-  const _id = req.token_data._id;
-  const updateData = {
-    _id,
-    toUpdate: {
-      subject: req.body.subject,
-      text: req.body.text,
-      timezone: req.body.timezone,
-      newDate: momen().tz(req.body.timezone).format("YYYY-MM-DD HH:mm:ss ZZ"),
-      endDate: momen().tz(req.body.timezone).format(`${req.body.reminderTime}`),
-      reminderTime: req.body.reminderTime,
-    },
-  };
-  const update = await usersDataAccess.updateUser(updateData);
-  return {
-    error: false,
-    sucess: true,
-    message: "updated reminderTime successfully",
-    data: update,
-  };
-};
-
 const loginU = async (email) => {
   const data = await usersDataAccess.findUserByUsername({
     email,
@@ -287,11 +171,3 @@ exports.success = async (req, res) => {
     return new ExpressError(500, err.message);
   }
 };
-
-// const deAll=async()=>{
-//     // const user=await User.remove({})
-//     const data = await usersDataAccess.deleteAll();
-//     console.log(data)
-//   }
-// deAll()
-///

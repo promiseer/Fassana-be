@@ -1,6 +1,5 @@
 const express = require("express");
 // const upload = require("../middleware/multer");
-const { authenticateToken } = require("../utils/jwt");
 const router = express.Router();
 const userController = require("./auth.controller");
 

@@ -23,5 +23,5 @@ const projectSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Leads = mongoose.model("Project", leadsSchema);
+const Leads = mongoose.model("project", projectSchema);
 module.exports = Leads;

@@ -1,33 +1,51 @@
-const Leads = require("./project.model");
+const Task = require("./task.model");
+const Project = require("../project/project.model");
 require("../utils/jwt");
 
-const createLeads = async (projectToStore) => {
-  const storedlead = await Leads.create(projectToStore);
-  return storedlead;
+const findTask = async (data) => {
+  const task = await Task.findById(data);
+  return task;
+};
+const findTaskByProjectId = async (data) => {
+  const task = await Project.findById(data);
+  return task;
 };
 
-const findLeads = async () => {
-  const goal = await Leads.find();
-  return goal;
+const storeTask = async (projectToStore) => {
+  const storedTask = await Task.create(projectToStore);
+  return storedTask;
 };
 
-const findUnclaimedLeads = async () => {
-  const goal = await Leads.find({ isClaimed: false });
-  return goal;
-};
-
-const findClaimedLeadsByEmployee = async (claimedLeads) => {
-  const goal = await Leads.find(claimedLeads );
-  return goal;
-};
-
-const claimLead = async (leadData) => {
-  const goal = await Leads.findOneAndUpdate(
-    leadData.leadId,
-    { $set: leadData.toUpdate },
+const updateTask = async (projectData) => {
+  console.log(projectData);
+  const task = await Task.findByIdAndUpdate(
+    projectData._id,
+    { $set: projectData.toUpdate },
     { new: true }
   );
-  return goal;
+  return task;
+};
+const deleteTask = async (projectData) => {
+  const task = await Task.findByIdAndDelete(projectData._id);
+  return task;
 };
 
-module.exports = { createLeads, findLeads, findUnclaimedLeads,findClaimedLeadsByEmployee, claimLead };
+const findAll = async () => {
+  const task = await Task.find({});
+  return task;
+};
+
+const deleteAll = async () => {
+  const task = await Task.remove({});
+  return task;
+};
+
+module.exports = {
+  findTask,
+  findTaskByProjectId,
+  storeTask,
+  updateTask,
+  findAll,
+  deleteAll,
+  deleteTask,
+};

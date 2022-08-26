@@ -16,37 +16,6 @@ exports.getUser = async (req) => {
   };
 };
 
-exports.createUser = async (req) => {
-  const { email, password, first_name, last_name, contact } = req.body;
-  if (!password || !email || !first_name || !last_name || !contact) {
-    throw new ExpressError(401, "Bad request");
-  }
-  const passwordHash = bcrypt.hashSync(req.body.password, 10);
-  const data = {
-    profileImage: "uploads/1633780506772defaultImage.jpg",
-    isVerified: false,
-    first_name: req.body.first_name,
-    last_name: req.body.last_name,
-    contact: req.body.contact,
-    email: req.body.email,
-    password: passwordHash,
-  };
-  const storedUser = await usersDataAccess.storeUser(data);
-  const otpSend = {
-    from: process.env.email,
-    to: storedUser.email,
-    subject: "Sending email using node.js",
-    text: `http://localhost:3001/Resetpassword/${storedUser._id}`,
-  };
-  return {
-    error: false,
-    sucess: true,
-    message: "user created successfully",
-    data: storedUser,
-  };
-};
-
-
 exports.updateUser = async (req, res) => {
   const _id = req.token_data._id;
   const updateData = {
@@ -63,6 +32,18 @@ exports.updateUser = async (req, res) => {
     sucess: true,
     message: "updated user successfully",
     data: update,
+  };
+};
+
+exports.deleteUser = async (req, res) => {
+  const _id = req.token_data._id;
+
+  const del = await usersDataAccess.deleteUser({ _id });
+  return {
+    error: false,
+    sucess: true,
+    message: "deleted user successfully",
+    data: del,
   };
 };
 
@@ -260,4 +241,3 @@ exports.success = async (req, res) => {
     return new ExpressError(500, err.message);
   }
 };
-

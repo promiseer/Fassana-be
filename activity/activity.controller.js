@@ -1,20 +1,20 @@
-const taskDataAccess = require("./task.dal");
+const activityDataAccess = require("./activity.dal");
 const ExpressError = require("../utils/errorGenerator");
 require("../utils/jwt");
 
-exports.getAllTasks = async (req, res) => {
-  const task = await taskDataAccess.findAll();
+exports.getAllActivitys = async (req, res) => {
+  const activity = await activityDataAccess.findAll();
   return {
     error: false,
     sucess: true,
-    message: "Get all task Sucessfully",
-    data: task,
+    message: "Get all activity Sucessfully",
+    data: activity,
   };
 };
 
-exports.getTaskByProjectId = async (req) => {
+exports.getActivityByProjectId = async (req) => {
   const _id = req.params.projectId;
-  const users = await taskDataAccess.findTask({ _id: _id });
+  const users = await activityDataAccess.findActivity({ _id: _id });
   return {
     error: false,
     sucess: true,
@@ -23,9 +23,9 @@ exports.getTaskByProjectId = async (req) => {
   };
 };
 
-exports.getTask = async (req) => {
+exports.getActivity = async (req) => {
   const _id = req.token_data._id;
-  const users = await taskDataAccess.findTask({ _id: _id });
+  const users = await activityDataAccess.findActivity({ _id: _id });
   return {
     error: false,
     sucess: true,
@@ -34,24 +34,24 @@ exports.getTask = async (req) => {
   };
 };
 
-exports.createTask = async (req, res) => {
+exports.createActivity = async (req, res) => {
   const {
-    task_name,
-    task_description,
-    project_id,
+    activity_name,
+    activity_description,
+    task_id,
+    member_id,
     status,
     priority,
-    planned_start_budget,
     planned_start_date,
     planned_end_date,
     actual_start_date,
     actual_end_date,
   } = req.body;
   if (
-    !task_name ||
-    !task_description ||
-    !project_id ||
-    !planned_start_budget ||
+    !activity_name ||
+    !activity_description ||
+    !task_id ||
+    !member_id ||
     !priority ||
     !status ||
     !planned_start_date ||
@@ -62,62 +62,60 @@ exports.createTask = async (req, res) => {
     throw new ExpressError(401, "Bad request");
   }
   const data = {
-    project_id: req.body.project_id,
-    task_name: req.body.task_name,
-    task_description: req.body.task_description,
+    task_id: req.body.task_id,
+    member_id: req.body.member_id,
+    activity_name: req.body.activity_name,
+    activity_description: req.body.activity_description,
     priority: req.body.priority,
     status: req.body.status,
-    task_description: req.body.task_description,
-    planned_start_budget: req.body.planned_start_budget,
     planned_start_date: req.body.planned_start_date,
     planned_end_date: req.body.planned_end_date,
     actual_start_date: req.body.actual_start_date,
     actual_end_date: req.body.actual_end_date,
   };
-  const storedTask = await taskDataAccess.storeTask(data);
+  const storedActivity = await activityDataAccess.storeActivity(data);
   return {
     error: false,
     sucess: true,
-    message: "task created successfully",
-    data: storedTask,
+    message: "activity created successfully",
+    data: storedActivity,
   };
 };
 
-exports.updateTask = async (req, res) => {
-  const _id = req.params.taskId;
+exports.updateActivity = async (req, res) => {
+  const _id = req.params.activityId;
   const updateData = {
     _id,
     toUpdate: {
-      project_id: req.body.project_id,
-      task_name: req.body.task_name,
-      task_description: req.body.task_description,
+      task_id: req.body.task_id,
+      member_id: req.body.member_id,
+      activity_name: req.body.activity_name,
+      activity_description: req.body.activity_description,
       priority: req.body.priority,
       status: req.body.status,
-      task_description: req.body.task_description,
-      planned_start_budget: req.body.planned_start_budget,
       planned_start_date: req.body.planned_start_date,
       planned_end_date: req.body.planned_end_date,
       actual_start_date: req.body.actual_start_date,
       actual_end_date: req.body.actual_end_date,
     },
   };
-  const update = await taskDataAccess.updateTask(updateData);
+  const update = await activityDataAccess.updateActivity(updateData);
   return {
     error: false,
     sucess: true,
-    message: "updated task successfully",
+    message: "updated activity successfully",
     data: update,
   };
 };
 
-exports.deleteTask = async (req, res) => {
-  const _id = req.params.taskId;
+exports.deleteActivity = async (req, res) => {
+  const _id = req.params.activityId;
 
-  const del = await taskDataAccess.deleteTask({ _id });
+  const del = await activityDataAccess.deleteActivity({ _id });
   return {
     error: false,
     sucess: true,
-    message: "deleted task successfully",
+    message: "deleted activity successfully",
     data: del,
   };
 };

@@ -17,5 +17,5 @@ const memberSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Leads = mongoose.model("Project", memberSchema);
+const Leads = mongoose.model("member", memberSchema);
 module.exports = Leads;

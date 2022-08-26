@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
-const taskSchema = new mongoose.Schema(
+const activitySchema = new mongoose.Schema(
   {
-    task_name: {
+    activity_name: {
       type: String,
     },
-    task_description: {
+    activity_description: {
       type: String,
     },
     priority: {
@@ -15,12 +15,13 @@ const taskSchema = new mongoose.Schema(
       default: "pending",
       enum: ["pending", "completed"],
     },
-    project_id: {
+    task_id: {
       type: mongoose.Types.ObjectId,
-      ref: "project",
+      ref: "task",
     },
-    planned_start_budget: {
-      type: Number,
+    member_id: {
+      type: mongoose.Types.ObjectId,
+      ref: "member",
     },
     planned_start_date: {
       type: Date,
@@ -38,5 +39,5 @@ const taskSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Task = mongoose.model("task", taskSchema);
-module.exports = Task;
+const Activity = mongoose.model("activity", activitySchema);
+module.exports = Activity;

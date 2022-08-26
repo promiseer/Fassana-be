@@ -34,7 +34,7 @@ function isMentor(req, res, next) {
   jwt.verify(token, process.env.secret_key, (err, data) => {
     if (err)
       return res.status(401).json({ error: true, message: "Unauthorized" });
-    if ((data.role = 0)) next();
+    if ((data.role == 1)) next();
     else return res.status(401).json({ error: true, message: "Unauthorized" });
   });
 }
@@ -47,8 +47,8 @@ function isUser(req, res, next) {
   jwt.verify(token, process.env.secret_key, (err, data) => {
     if (err)
       return res.status(401).json({ error: true, message: "Unauthorized" });
-    if ((data.role = 1)) next();
+    if ((data.role ==0)) next();
     else return res.status(401).json({ error: true, message: "Unauthorized" });
   });
 }
-module.exports = { generateAccessToken, authenticateToken };
+module.exports = { generateAccessToken, authenticateToken ,isMentor,isUser};

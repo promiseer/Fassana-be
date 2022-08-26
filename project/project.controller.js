@@ -1,83 +1,83 @@
 const projectDataAccess = require("./project.dal");
 const ExpressError = require("../utils/errorGenerator");
 require("../utils/jwt");
-exports.getAllLeads = async (req) => {
-  const goal = await projectDataAccess.findLeads();
+
+exports.getAllProjects = async (req, res) => {
+  const project = await projectDataAccess.findAll();
   return {
     error: false,
     sucess: true,
-    message: "Get project data",
-    data: goal,
-  };
-};
-exports.getUnclaimedLeads = async (req) => {
-  const goal = await projectDataAccess.findUnclaimedLeads();
-  return {
-    error: false,
-    sucess: true,
-    message: "Get project data",
-    data: goal,
+    message: "Get all project Sucessfully",
+    data: project,
   };
 };
 
-exports.getClaimedLeadsByEmployee = async (req) => {
-  const userId = req.token_data._id;
-console.log(userId)
-  const goal = await projectDataAccess.findClaimedLeadsByEmployee({
-    claimedUser: userId,
-  });
-  return {
-    error: false,
-    sucess: true,
-    message: "Get project data",
-    data: goal,
-  };
-};
-exports.createForm = async (req) => {
-  const { email, name, interestedCourse } = req.body;
-  if (!name || !email || !interestedCourse) {
+exports.createProject = async (req, res) => {
+  const {
+    project_name,
+    project_description,
+    planned_start_date,
+    planned_end_date,
+    actual_start_date,
+    actual_end_date,
+  } = req.body;
+  if (
+    !project_name ||
+    !project_description ||
+    !planned_start_date ||
+    !planned_end_date ||
+    !actual_start_date ||
+    !actual_end_date
+  ) {
     throw new ExpressError(401, "Bad request");
   }
   const data = {
-    name: req.body.name,
-    email: req.body.email,
-    interestedCourse: req.body.interestedCourse,
+    project_name: req.body.project_name,
+    project_description: req.body.project_description,
+    planned_start_date: req.body.planned_start_date,
+    planned_end_date: req.body.planned_end_date,
+    actual_start_date: req.body.actual_start_date,
+    actual_end_date: req.body.actual_end_date,
   };
-  const lead = await projectDataAccess.createLeads(data);
+  const storedProject = await projectDataAccess.storeProject(data);
   return {
     error: false,
     sucess: true,
-    message: "Get user data",
-    data: lead,
+    message: "project created successfully",
+    data: storedProject,
   };
 };
-exports.claimLead = async (req) => {
-  const { leadId } = req.params;
-  if (!leadId) {
-    throw new ExpressError(401, "Bad request");
-  }
-  const userId = req.token_data._id;
 
+exports.updateProject = async (req, res) => {
+  const _id = req.params.projectId;
   const updateData = {
-    leadId,
+    _id,
     toUpdate: {
-      isClaimed: true,
-      claimedUser: userId,
+      project_name: req.body.project_name,
+      project_description: req.body.project_description,
+      planned_start_date: req.body.planned_start_date,
+      planned_end_date: req.body.planned_end_date,
+      actual_start_date: req.body.actual_start_date,
+      actual_end_date: req.body.actual_end_date,
     },
   };
-  console.log(updateData)
-  const update = await projectDataAccess.claimLead(updateData);
-  if (!update) {
-    return {
-      error: true,
-      sucess: false,
-      message: "user goal-set successfully",
-    };
-  }
+  const update = await projectDataAccess.updateProject(updateData);
   return {
     error: false,
     sucess: true,
-    message: "claimed successfully!",
+    message: "updated project successfully",
     data: update,
+  };
+};
+
+exports.deleteProject = async (req, res) => {
+  const _id = req.params.projectId;
+
+  const del = await projectDataAccess.deleteProject({ _id });
+  return {
+    error: false,
+    sucess: true,
+    message: "deleted project successfully",
+    data: del,
   };
 };

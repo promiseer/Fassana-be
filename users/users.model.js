@@ -26,8 +26,13 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isMentor: {
+      type: Boolean,
+      default: false,
+    },
     role: {
       type: Number,
+      default: 0,
       ref: "role",
     },
   },

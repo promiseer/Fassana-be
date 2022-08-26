@@ -12,11 +12,11 @@ router.post("/createProject", async (request, response) => {
   return response.json(result);
 });
 
-router.put("/updateProject/:leadId", authenticateToken, async (req, res) => {
+router.put("/updateProject/:projectId", authenticateToken, async (req, res) => {
   const result = await projectController.updateProject(req);
   return res.json(result);
 });
-router.put("/deleteProject/:leadId", authenticateToken, async (req, res) => {
+router.delete("/deleteProject/:projectId", authenticateToken, async (req, res) => {
   const result = await projectController.deleteProject(req);
   return res.json(result);
 });

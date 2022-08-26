@@ -1,33 +1,47 @@
-const Leads = require("./project.model");
+const Project = require("./project.model");
 require("../utils/jwt");
 
-const createLeads = async (projectToStore) => {
-  const storedlead = await Leads.create(projectToStore);
-  return storedlead;
+const findProject = async (data) => {
+  const project = await Project.findById(data);
+  return project;
 };
 
-const findLeads = async () => {
-  const goal = await Leads.find();
-  return goal;
+const storeProject = async (projectToStore) => {
+  const storedProject = await Project.create(projectToStore);
+  return storedProject;
 };
 
-const findUnclaimedLeads = async () => {
-  const goal = await Leads.find({ isClaimed: false });
-  return goal;
-};
 
-const findClaimedLeadsByEmployee = async (claimedLeads) => {
-  const goal = await Leads.find(claimedLeads );
-  return goal;
-};
 
-const claimLead = async (leadData) => {
-  const goal = await Leads.findOneAndUpdate(
-    leadData.leadId,
-    { $set: leadData.toUpdate },
+const updateProject = async (projectData) => {
+  console.log(projectData)
+  const project = await Project.findByIdAndUpdate(
+    projectData._id,
+    { $set: projectData.toUpdate },
     { new: true }
   );
-  return goal;
+  return project;
+};
+const deleteProject = async (projectData) => {
+  const project = await Project.findByIdAndDelete(projectData._id);
+  return project;
 };
 
-module.exports = { createLeads, findLeads, findUnclaimedLeads,findClaimedLeadsByEmployee, claimLead };
+const findAll = async () => {
+  const project = await Project.find({});
+  return project;
+};
+
+const deleteAll = async () => {
+  const project = await Project.remove({});
+  return project;
+};
+
+module.exports = {
+  findProject,
+  storeProject,
+  updateProject,
+  findAll,
+  deleteAll,
+  deleteProject
+};

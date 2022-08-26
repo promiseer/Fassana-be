@@ -24,6 +24,10 @@ const updateUser = async (userData) => {
   );
   return user;
 };
+const deleteUser = async (userData) => {
+  const user = await User.findByIdAndDelete(userData._id);
+  return user;
+};
 
 const findAll = async () => {
   const user = await User.find({});
@@ -42,4 +46,5 @@ module.exports = {
   updateUser,
   findAll,
   deleteAll,
+  deleteUser
 };

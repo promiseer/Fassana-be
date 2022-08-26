@@ -19,6 +19,8 @@ const memberRouters = require("./member/member.router");
 const middleware = require("./utils/middleware");
 
 const app = express();
+//for test
+app.get("/", (req, res) => res.send({ msg: "welcome to my application" }));
 
 //middlewears
 app.use(cors());

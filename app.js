@@ -1,11 +1,7 @@
-require("./config/dbConfig");
-require("dotenv").config();
-require("express-async-errors");
-
 const cors = require("cors");
 const morgan = require("morgan");
 const express = require("express");
-const PORT = process.env.PORT || 3000;
+const app = express();
 
 //routes
 const authRouters = require("./auth/auth.router");
@@ -17,8 +13,8 @@ const activityRouters = require("./activity/activity.router");
 const teamRouters = require("./team/team.router");
 const memberRouters = require("./member/member.router");
 const middleware = require("./utils/middleware");
+const globalErrorHandler = require("./utils/errorGenerator")
 
-const app = express();
 //for test
 app.get("/", (req, res) => res.send({ msg: "welcome to my application" }));
 
@@ -28,20 +24,19 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
 
-app.use("/auth", authRouters);
-app.use("/users", userRouters);
-app.use("/role", roleRouters);
-app.use("/team", teamRouters);
-app.use("/member", memberRouters);
+app.use("/api/v1/auth", authRouters);
+app.use("/api/v1/users", userRouters);
+app.use("/api/v1/role", roleRouters);
+app.use("/api/v1/team", teamRouters);
+app.use("/api/v1/member", memberRouters);
 
-app.use("/project", projectsRouters);
-app.use("/task", taskRouters);
-app.use("/activity", activityRouters);
+app.use("/api/v1/project", projectsRouters);
+app.use("/api/v1/task", taskRouters);
+app.use("/api/v1/activity", activityRouters);
 
 //errroHandelers
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
+app.use(globalErrorHandler)
 
-app.listen(PORT, () => {
-  console.log(`SERVER IS WORKING AT PORT ${PORT}...`);
-});
+module.exports=app

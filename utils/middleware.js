@@ -1,5 +1,5 @@
 const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: "Unknown endpoint" });
+  response.status(404).send({ error: `can't find ${request.originalUrl} on this server` });
 };
 
 const errorHandler = (error, request, response, next) => {

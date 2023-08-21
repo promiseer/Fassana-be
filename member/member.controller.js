@@ -1,5 +1,5 @@
 const memberDataAccess = require("./member.dal");
-const ExpressError = require("../utils/errorGenerator");
+const ExpressError = require("../utils/appError");
 require("../utils/jwt");
 
 exports.getAllMembers = async (req, res) => {

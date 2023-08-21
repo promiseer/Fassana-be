@@ -1,6 +1,8 @@
 const cors = require("cors");
 const morgan = require("morgan");
 const express = require("express");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./utils/docs/swagger-output.json")
 const app = express();
 
 //routes
@@ -16,14 +18,26 @@ const middleware = require("./utils/middleware");
 const globalErrorHandler = require("./utils/errorGenerator")
 
 //for test
-app.get("/", (req, res) => res.send({ msg: "welcome to my application" }));
+app.get("/api/v1/checkHealth", (req, res) => res.send({ status: true }));
 
+const corsOptions = {
+    origin: process.env.WHITE_LIST_ORIGINS, // Specify the allowed origin(s)
+    methods: "GET,POST,PUT,DELETE", // Specify the allowed HTTP methods
+    allowedHeaders: "Content-Type, Authorization", // Specify the allowed headers
+};
+const swaggerOptions = {
+    swaggerOptions: {
+        validatorUrl: null
+    }
+    , customCss: '.swagger-ui .topbar { display: none }'
+}
 //middlewears
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
 
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOptions));
 app.use("/api/v1/auth", authRouters);
 app.use("/api/v1/users", userRouters);
 app.use("/api/v1/role", roleRouters);
@@ -39,4 +53,4 @@ app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 app.use(globalErrorHandler)
 
-module.exports=app
+module.exports = app

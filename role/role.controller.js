@@ -1,6 +1,6 @@
 const roleDataAccess = require("./role.dal");
 require("dotenv").config();
-const ExpressError = require("../utils/errorGenerator");
+const ExpressError = require("../utils/appError");
 const { generateAccessToken } = require("../utils/jwt");
 
 exports.getAllRoles = async (req, res) => {

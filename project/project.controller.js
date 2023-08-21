@@ -1,5 +1,5 @@
 const projectDataAccess = require("./project.dal");
-const ExpressError = require("../utils/errorGenerator");
+const ExpressError = require("../utils/appError");
 require("../utils/jwt");
 
 exports.getAllProjects = async (req, res) => {

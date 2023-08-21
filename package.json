@@ -2,11 +2,12 @@
   "name": "project-management",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "serverjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "NODE_ENV=development nodemon server.js",
-    "prod": "NODE_ENV=production nodemon server.js"
+    "dev": " nodemon server.js",
+    "prod": "APP_ENV=prod nodemon server.js",
+    "swagger-autogen": "node utils/swagger.js"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +22,11 @@
     "moment-timezone": "^0.5.34",
     "mongoose": "^6.0.8",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.13"
+    "nodemon": "^2.0.13",
+    "winston": "^3.10.0"
+  },
+  "devDependencies": {
+    "swagger-autogen": "^2.23.5",
+    "swagger-ui-express": "^5.0.0"
   }
 }

@@ -1,5 +1,5 @@
 const teamDataAccess = require("./team.dal");
-const ExpressError = require("../utils/errorGenerator");
+const ExpressError = require("../utils/appError");
 require("../utils/jwt");
 
 exports.getAllTeams = async (req, res) => {

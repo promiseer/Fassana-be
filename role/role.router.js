@@ -9,8 +9,8 @@ router.get("/getRoles", async (request, response) => {
 });
 router.post(
   "/createRole",
-  authenticateToken,
-  isMentor,
+  // authenticateToken,
+  // isMentor,
   async (request, response) => {
     const result = await roleController.createRole(request);
     return response.json(result);

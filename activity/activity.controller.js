@@ -1,5 +1,5 @@
 const activityDataAccess = require("./activity.dal");
-const ExpressError = require("../utils/errorGenerator");
+const ExpressError = require("../utils/appError");
 require("../utils/jwt");
 
 exports.getAllActivitys = async (req, res) => {

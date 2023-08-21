@@ -2,7 +2,7 @@ const usersDataAccess = require("./auth.dal");
 const bcrypt = require("bcrypt");
 const momen = require("moment-timezone");
 require("dotenv").config();
-const ExpressError = require("../utils/errorGenerator");
+const ExpressError = require("../utils/appError");
 const { generateAccessToken } = require("../utils/jwt");
 
 exports.createUser = async (req) => {

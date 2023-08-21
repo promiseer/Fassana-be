@@ -1,5 +1,5 @@
 const taskDataAccess = require("./task.dal");
-const ExpressError = require("../utils/errorGenerator");
+const ExpressError = require("../utils/appError");
 require("../utils/jwt");
 
 exports.getAllTasks = async (req, res) => {

@@ -9,15 +9,13 @@ const taskSchema = new mongoose.Schema(
     },
     priority: {
       type: String,
+      default: "low",
+      enum: ["low", "medium", "high"],
     },
     status: {
       type: String,
       default: "pending",
-      enum: ["pending", "completed"],
-    },
-    project_id: {
-      type: mongoose.Types.ObjectId,
-      ref: "project",
+      enum: ["pending", "progress", "completed", "blocked", "review"],
     },
     planned_start_budget: {
       type: Number,
@@ -34,9 +32,24 @@ const taskSchema = new mongoose.Schema(
     actual_end_date: {
       type: Date,
     },
+    project: {
+      type: mongoose.Types.ObjectId,
+      ref: "project",
+    },
+    assignee: {
+      type: mongoose.Types.ObjectId,
+      ref: "user",
+    },
+    collaborators: [{
+      type: mongoose.Types.ObjectId,
+      ref: "user",
+    }],
   },
   { timestamps: true }
 );
 
+taskSchema.post("remove", () => {
+  let task = this
+})
 const Task = mongoose.model("task", taskSchema);
 module.exports = Task;

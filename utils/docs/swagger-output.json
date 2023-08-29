@@ -57,7 +57,7 @@
                 "role": {
                   "example": "any"
                 },
-                "isMentor": {
+                "isAdmin": {
                   "example": "any"
                 }
               }
@@ -224,7 +224,7 @@
                 "_id": {
                   "example": "any"
                 },
-                "role_name": {
+                "role": {
                   "example": "any"
                 }
               }
@@ -265,7 +265,7 @@
                 "_id": {
                   "example": "any"
                 },
-                "role_name": {
+                "role": {
                   "example": "any"
                 }
               }

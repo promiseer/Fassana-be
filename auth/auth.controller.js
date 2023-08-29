@@ -6,15 +6,14 @@ const ExpressError = require("../utils/appError");
 const { generateAccessToken } = require("../utils/jwt");
 
 exports.createUser = async (req) => {
-  const { email, password, first_name, last_name, contact, isMentor, role } =
+  const { email, password, first_name, last_name, contact, isAdmin, role } =
     req.body;
   if (
     !password ||
     !email ||
     !first_name ||
     !last_name ||
-    !contact ||
-    !role
+    !contact
   ) {
     throw new ExpressError(401, "Bad request");
   }
@@ -26,8 +25,6 @@ exports.createUser = async (req) => {
     last_name: req.body.last_name,
     contact: req.body.contact,
     email: req.body.email,
-    role: req.body.role,
-    isMentor: req.body.isMentor,
     password: passwordHash,
   };
   const storedUser = await usersDataAccess.storeUser(data);
@@ -48,7 +45,7 @@ exports.loginUser = async (req, res) => {
       "Either username or password is missing in the request."
     );
   }
-  const userData = await usersDataAccess.findUserByUsername({
+  const userData = await usersDataAccess.findUserByEmail({
     email: req.body.email,
   });
   if (!userData) {

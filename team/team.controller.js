@@ -13,12 +13,14 @@ exports.getAllTeams = async (req, res) => {
 };
 
 exports.createTeam = async (req, res) => {
+  const createdBy = req.token_data._id;
   const { team_name } = req.body;
   if (!team_name) {
     throw new ExpressError(401, "Bad request");
   }
   const data = {
     team_name: req.body.team_name,
+    createdBy
   };
   const storedTeam = await teamDataAccess.storeTeam(data);
   return {

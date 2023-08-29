@@ -10,12 +10,12 @@ const memberSchema = new mongoose.Schema(
       ref: "user",
     },
     role_id: {
-      type: String,
+      type: mongoose.Types.ObjectId,
       ref: "role",
     },
   },
   { timestamps: true }
 );
 
-const Leads = mongoose.model("member", memberSchema);
-module.exports = Leads;
+const Member = mongoose.model("member", memberSchema);
+module.exports = Member;

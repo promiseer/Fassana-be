@@ -11,8 +11,8 @@ const storeUser = async (userToStore) => {
   return storedUser;
 };
 
-const findUserByUsername = async (username) => {
-  const user = await User.findOne(username);
+const findUserByEmail = async (email) => {
+  const user = await User.findOne(email).populate("role");
   return user;
 };
 
@@ -38,7 +38,7 @@ const deleteAll = async () => {
 module.exports = {
   findUser,
   storeUser,
-  findUserByUsername,
+  findUserByEmail,
   updateUser,
   findAll,
   deleteAll,

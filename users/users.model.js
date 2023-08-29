@@ -10,34 +10,64 @@ const userSchema = new mongoose.Schema(
     profileImage: {
       type: String,
     },
+    about: {
+      type: String
+    },
     contact: {
       type: Number,
     },
     email: {
       type: String,
       required: true,
+      trim: true,
       unique: true,
     },
     password: {
       type: String,
       required: true,
+      minlength: 6,
+      trim: true,
+    },
+    locale: {
+      type: String,
+      default: "en-IN"
+    },
+    timezone: {
+      type: String,
+      default: "Asia/Kolkata"
     },
     isVerified: {
       type: Boolean,
       default: false,
     },
-    isMentor: {
+    isAdmin: {
       type: Boolean,
       default: false,
     },
     role: {
-      type: Number,
-      default: 0,
+      type: mongoose.Types.ObjectId,
       ref: "role",
     },
+    tasks: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "task",
+      }
+    ],
+    teams: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "team",
+      }
+    ],
+    projects: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: "project",
+      }
+    ],
   },
   { timestamps: true }
 );
 
-const User = mongoose.model("User", userSchema);
-module.exports = User;
+module.exports = mongoose.model("User", userSchema);

@@ -1,23 +1,24 @@
 const jwt = require("jsonwebtoken");
+const ExpressError = require("./appError");
 require("dotenv").config();
 
-function generateAccessToken(username) {
+function generateAccessToken(userData, expiresIn = process.env.JWT_EXPIRES) {
   return jwt.sign(
-    { _id: username._id, role: username.role },
-    process.env.secret_key,
+    { _id: userData._id, role: userData.role },
+    process.env.JWT_SECRET,
     {
-      expiresIn: "18000s", //expires IN 5hours
+      expiresIn
     }
   );
 }
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers.authorization;
-  if (authHeader === undefined) {
+  if (authHeader === undefined || !authHeader.split(" ")[1]) {
     return res.sendStatus(401).json({ error: true, message: "Unauthorized" });
   }
   const token = authHeader.split(" ")[1];
-  jwt.verify(token, process.env.secret_key, (err, data) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, data) => {
     if (err)
       return res.status(401).json({ error: true, message: "Unauthorized" });
     req.token_data = data;
@@ -25,16 +26,16 @@ function authenticateToken(req, res, next) {
   });
 }
 
-function isMentor(req, res, next) {
+function isAdmin(req, res, next) {
   const authHeader = req.headers.authorization;
   if (authHeader === undefined) {
     return res.sendStatus(401).json({ error: true, message: "Unauthorized" });
   }
   const token = authHeader.split(" ")[1];
-  jwt.verify(token, process.env.secret_key, (err, data) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, data) => {
     if (err)
       return res.status(401).json({ error: true, message: "Unauthorized" });
-    if ((data.role == 1)) next();
+    if ((data.role == "admin")) next();
     else return res.status(401).json({ error: true, message: "Unauthorized" });
   });
 }
@@ -44,11 +45,12 @@ function isUser(req, res, next) {
     return res.sendStatus(401).json({ error: true, message: "Unauthorized" });
   }
   const token = authHeader.split(" ")[1];
-  jwt.verify(token, process.env.secret_key, (err, data) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, data) => {
     if (err)
       return res.status(401).json({ error: true, message: "Unauthorized" });
-    if ((data.role ==0)) next();
+    if ((data.role == "user")) next();
     else return res.status(401).json({ error: true, message: "Unauthorized" });
   });
 }
-module.exports = { generateAccessToken, authenticateToken ,isMentor,isUser};
+
+module.exports = { generateAccessToken, authenticateToken, isAdmin, isUser };

@@ -14,7 +14,6 @@ process.on("uncaughtException", (error) => {
 
 process.on("unhandledRejection", (err) => {
   console.log("UnhandleRejection Shutting down the application");
-  console.log(err)
   console.log(err.name, err.message);
   process.exit(1);
 });

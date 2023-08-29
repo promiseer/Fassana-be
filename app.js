@@ -17,7 +17,7 @@ const memberRouters = require("./member/member.router");
 const middleware = require("./utils/middleware");
 const globalErrorHandler = require("./utils/errorGenerator")
 
-//for test
+//check health
 app.get("/api/v1/checkHealth", (req, res) => res.send({ status: true }));
 
 const corsOptions = {

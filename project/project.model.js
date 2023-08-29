@@ -23,5 +23,22 @@ const projectSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Leads = mongoose.model("project", projectSchema);
-module.exports = Leads;
+projectSchema.post("save", async () => {
+  await org.findByIdAndUpdate(
+    this.orgnizationId,
+    {
+      $addToSet: { projects: this._id }
+    }
+  )
+})
+
+projectSchema.post("remove", async () => {
+  await org.findByIdAndUpdate(
+    this.orgnizationId,
+    {
+      $pull: { projects: this._id }
+    }
+  )
+})
+const Project = mongoose.model("project", projectSchema);
+module.exports = Project;

@@ -14,13 +14,12 @@ exports.getAllRoles = async (req, res) => {
 };
 
 exports.createRole = async (req, res) => {
-  const { _id, role_name } = req.body;
-  if (!role_name || 0>_id) {
-    throw new ExpressError(401, "Bad request");
+  const { role } = req.body;
+  if (!role) {
+    return new ExpressError(401, "Bad request");
   }
   const data = {
-    _id: req.body._id,
-    role_name: req.body.role_name,
+    role: req.body.role,
   };
   const storedRole = await roleDataAccess.storeRole(data);
   return {
@@ -37,7 +36,7 @@ exports.updateRole = async (req, res) => {
     _id,
     toUpdate: {
       _id: req.body._id,
-      role_name: req.body.role_name,
+      role: req.body.role,
     },
   };
   const update = await roleDataAccess.updateRole(updateData);
